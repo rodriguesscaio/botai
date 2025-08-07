@@ -2,3 +2,5 @@ spring:
   application:
     name: botai
 
+server:
+  port: 10000
