@@ -14,7 +14,7 @@ class WebHookWhatsAppController {
     @Value("\${WHATSAPP_VERIFY_TOKEN}")
     private lateinit var verifyToken: String
 
-    @GetMapping("/webhook")
+    @GetMapping
     fun verifyWebhook(
         @RequestParam("hub.mode") mode: String?,
         @RequestParam("hub.challenge") challenge: String,
