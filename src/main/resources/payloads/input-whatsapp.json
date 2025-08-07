@@ -1,0 +1,40 @@
+{
+  "object": "whatsapp_business_account",
+  "entry": [
+    {
+      "id": "WHATSAPP_BUSINESS_ACCOUNT_ID",
+      "time": 1625487767,
+      "changes": [
+        {
+          "value": {
+            "messaging_product": "whatsapp",
+            "metadata": {
+              "display_phone_number": "WHATSAPP_PHONE_NUMBER",
+              "phone_number_id": "PHONE_NUMBER_ID"
+            },
+            "contacts": [
+              {
+                "profile": {
+                  "name": "NOME_DO_CONTATO"
+                },
+                "wa_id": "WHATSAPP_ID_DO_CONTATO"
+              }
+            ],
+            "messages": [
+              {
+                "from": "WHATSAPP_ID_DO_CONTATO",
+                "id": "wamid.xxxxxxxxxxxxxxxxxxxxxxxx",
+                "timestamp": "1625487767",
+                "type": "text",
+                "text": {
+                  "body": "TEXTO_DA_MENSAGEM"
+                }
+              }
+            ]
+          },
+          "field": "messages"
+        }
+      ]
+    }
+  ]
+}
