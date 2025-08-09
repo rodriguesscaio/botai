@@ -1,6 +1,7 @@
 package com.firstchat.botai.adapter.input.whatsapp.dto
 
 import com.fasterxml.jackson.annotation.JsonAlias
+import com.firstchat.botai.domain.Message
 
 data class WhatsAppWebhookPayload(
     val `object`: String,
@@ -86,3 +87,17 @@ data class PricingDto(
     val category: String?,
     val type: String?
 )
+
+fun WhatsAppWebhookPayload.toMessage(): Message {
+    val changes = this.entry.first().changes?.first() ?: throw Exception("Object changes not found.")
+
+    return Message(
+        messageProduct = changes.value.messagingProduct ?: throw Exception("messagingProduct not found."),
+        phoneNumberId = changes.value.metadata?.phoneNumberId ?: throw Exception("phoneNumberId not found."),
+        name = changes.value.contacts?.first()?.profile?.name ?: throw Exception("name not found."),
+        phoneNumber = changes.value.contacts.first().waId ?: throw Exception("waId not found."),
+        textMessage = changes.value.messages?.first()?.text?.body ?: throw Exception("body not found."),
+        typeMessage = changes.value.messages.first().type ?: throw Exception("type not found."),
+        timestamp = changes.value.messages.first().timestamp ?: throw Exception("timestamp not found.")
+    )
+}

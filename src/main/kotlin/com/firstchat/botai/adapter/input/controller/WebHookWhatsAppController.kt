@@ -1,6 +1,8 @@
 package com.firstchat.botai.adapter.input.controller
 
+import com.firstchat.botai.adapter.input.MessageService
 import com.firstchat.botai.adapter.input.whatsapp.dto.WhatsAppWebhookPayload
+import com.firstchat.botai.adapter.input.whatsapp.dto.toMessage
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -9,7 +11,9 @@ import java.time.LocalDateTime
 
 @RestController
 @RequestMapping("/")
-class WebHookWhatsAppController {
+class WebHookWhatsAppController(
+    private val messageService: MessageService
+) {
 
     @Value("\${WHATSAPP_VERIFY_TOKEN}")
     private lateinit var verifyToken: String
@@ -37,6 +41,12 @@ class WebHookWhatsAppController {
         println("EVENTO RECEBIDO")
         println(LocalDateTime.now())
         println(input)
+
+        println("-----------------------------------")
+        println("RESPONSE MESSAGE")
+
+        val message = input.toMessage()
+        messageService.responseMessage(message)
 
         return ResponseEntity.ok().build()
     }

@@ -1,0 +1,16 @@
+package com.firstchat.botai.adapter.output
+
+import com.firstchat.botai.adapter.output.client.SendMessageClient
+import com.firstchat.botai.domain.Message
+import com.firstchat.botai.domain.toSendMessageRequest
+import com.firstchat.botai.port.output.SendMessageApiPort
+
+class SendMessageAdapter(
+    private val sendMessageClient: SendMessageClient
+): SendMessageApiPort {
+    override fun send(message: Message) {
+        val sendMessageRequest = message.toSendMessageRequest()
+
+        sendMessageClient.post(message.phoneNumberId.toInt(), sendMessageRequest)
+    }
+}
