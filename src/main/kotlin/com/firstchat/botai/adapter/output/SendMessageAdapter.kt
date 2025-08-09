@@ -11,6 +11,6 @@ class SendMessageAdapter(
     override fun send(message: Message) {
         val sendMessageRequest = message.toSendMessageRequest()
 
-        sendMessageClient.post(message.phoneNumberId.toInt(), sendMessageRequest)
+        sendMessageClient.post(message.phoneNumberId, sendMessageRequest)
     }
 }

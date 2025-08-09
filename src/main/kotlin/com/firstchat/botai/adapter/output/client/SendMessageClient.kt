@@ -11,7 +11,7 @@ class SendMessageClient(
     @Value("\${WHATSAPP_ACCESS_TOKEN}")
     lateinit var accessToken: String
 
-    fun post(phoneNumberId: Int, payload: SendMessageRequest) {
+    fun post(phoneNumberId: String, payload: SendMessageRequest) {
         webClient.post()
             .uri("https://graph.facebook.com/v19.0/$phoneNumberId/messages")
             .header("Authorization", "Bearer $accessToken")
