@@ -11,6 +11,8 @@ class SendMessageAdapter(
     override fun send(message: Message) {
         val sendMessageRequest = message.toSendMessageRequest()
 
+        println("Body to send: ${sendMessageRequest}")
+
         try {
             sendMessageClient.post(message.phoneNumberId, sendMessageRequest)
         } catch (e: Exception) {
