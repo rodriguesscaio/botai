@@ -11,6 +11,11 @@ class SendMessageAdapter(
     override fun send(message: Message) {
         val sendMessageRequest = message.toSendMessageRequest()
 
-        sendMessageClient.post(message.phoneNumberId, sendMessageRequest)
+        try {
+            sendMessageClient.post(message.phoneNumberId, sendMessageRequest)
+        } catch (e: Exception) {
+            println("Erro ao chamar a API do WhatsApp: ${e.message}")
+            println("Erro: ${e}")
+        }
     }
 }
