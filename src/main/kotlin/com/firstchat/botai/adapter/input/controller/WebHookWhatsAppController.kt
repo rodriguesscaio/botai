@@ -21,7 +21,7 @@ class WebHookWhatsAppController(
     @GetMapping
     fun verifyWebhook(
         @RequestParam("hub.mode") mode: String?,
-        @RequestParam("hub.challenge") challenge: String,
+        @RequestParam("hub.challenge") challenge: String?,
         @RequestParam("hub.verify_token") token: String?
     ): ResponseEntity<String> {
 
@@ -45,9 +45,31 @@ class WebHookWhatsAppController(
         println("-----------------------------------")
         println("RESPONSE MESSAGE")
 
-        val message = input.toMessage()
-        messageService.responseMessage(message)
+        val filterMessage = filterMessageToResponse(input)
+
+        if (filterMessage != null) {
+            val message = input.toMessage()
+            messageService.responseMessage(message)
+        }
 
         return ResponseEntity.ok().build()
+    }
+
+    private fun filterMessageToResponse(whatsAppWebhookPayload: WhatsAppWebhookPayload): WhatsAppWebhookPayload? {
+        val filteredEntries = whatsAppWebhookPayload.entry.mapNotNull { entry ->
+            val filteredChanges = entry.changes?.filter { change ->
+                change.field == "messages" && change.value.messages != null && change.value.contacts != null
+            }
+
+            when {
+                !filteredChanges.isNullOrEmpty() -> entry.copy(changes = filteredChanges)
+                else -> null
+            }
+        }
+
+        return when {
+            filteredEntries.isNotEmpty() -> whatsAppWebhookPayload.copy(entry = filteredEntries)
+            else -> null
+        }
     }
 }
