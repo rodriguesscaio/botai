@@ -13,13 +13,13 @@ data class Message(
     val timestamp: String
 )
 
-fun Message.toSendMessageRequest(): SendMessageRequest {
+fun Message.toSendMessageRequest(responseMessage: String): SendMessageRequest {
     return SendMessageRequest(
         messagingProduct = this.messageProduct,
         to = this.phoneNumber,
         type = this.typeMessage,
         text = TextRequest(
-            body = "respondendo de dentro do seu sistema!!"
+            body = responseMessage
         )
     )
 }
