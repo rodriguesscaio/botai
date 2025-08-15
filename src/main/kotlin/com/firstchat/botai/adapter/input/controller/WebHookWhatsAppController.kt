@@ -3,11 +3,11 @@ package com.firstchat.botai.adapter.input.controller
 import com.firstchat.botai.adapter.input.MessageService
 import com.firstchat.botai.adapter.input.whatsapp.dto.WhatsAppWebhookPayload
 import com.firstchat.botai.adapter.input.whatsapp.dto.toMessage
+import com.firstchat.botai.util.logger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import java.time.LocalDateTime
 
 @RestController
 @RequestMapping("/")
@@ -26,25 +26,19 @@ class WebHookWhatsAppController(
     ): ResponseEntity<String> {
 
         if (mode == "subscribe" && token == verifyToken) {
-            println("Webhook verificado com sucesso!")
+            logger.info("Webhook verificado com sucesso!")
             return ResponseEntity.ok(challenge)
-        } else {
-            println("Falha na verificação do webhook. Token inválido ou modo incorreto.")
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
         }
+
+        logger.error("Falha na verificação do webhook. Token inválido ou modo incorreto.")
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
     }
 
     @PostMapping
-    fun inputMessage(
+    fun receiveWhatsAppEvents(
         @RequestBody input: WhatsAppWebhookPayload
-    ): ResponseEntity<WhatsAppWebhookPayload> {
-        println("EVENTO RECEBIDO")
-        println(LocalDateTime.now())
-        println(input)
-
-        println("-----------------------------------")
-        println("RESPONSE MESSAGE")
-
+    ): ResponseEntity<Void> {
+        logger.info("Evento recebido: $input")
         val filterMessage = filterMessageToResponse(input)
 
         if (filterMessage != null) {
@@ -52,7 +46,7 @@ class WebHookWhatsAppController(
             messageService.responseMessage(message)
         }
 
-        return ResponseEntity.ok().build()
+        return ResponseEntity.status(HttpStatus.OK).build()
     }
 
     private fun filterMessageToResponse(whatsAppWebhookPayload: WhatsAppWebhookPayload): WhatsAppWebhookPayload? {
